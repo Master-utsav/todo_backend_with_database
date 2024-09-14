@@ -72,7 +72,7 @@ async function handelMarkTodo(req, res) {
 
     const updatedTodo = await Todo.findOneAndUpdate(
       { _id: todoId, userId: req.user._id }, 
-      { $set: { isCompleted: { $not: "$isCompleted" } } },
+      { $set:  { isCompleted: { $eq: [false, "$isCompleted"] } } },
       { new: true } 
     );
     
