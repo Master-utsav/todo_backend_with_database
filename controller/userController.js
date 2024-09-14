@@ -28,7 +28,7 @@ async function handelFetchTodo(req, res) {
 
     userTodos.forEach(async (todo) => {
       if (todo.completionTime && todo.completionTime < currentTime) {
-        todo.isCompleted = true;
+        todo.isCompleteTime = true;
         await todo.save(); 
       }
     });
