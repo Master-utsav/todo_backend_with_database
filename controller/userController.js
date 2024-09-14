@@ -70,15 +70,18 @@ async function handelMarkTodo(req, res) {
   try {
     const todoId = req.params.id;
 
-    const updatedTodo = await Todo.findOneAndUpdate(
-      { _id: todoId, userId: req.user._id }, 
-      { $set:  { isCompleted: { $eq: [false, "$isCompleted"] } } },
-      { new: true } 
-    );
-    
-    if (!updatedTodo) {
+    const todo = await Todo.findOne({
+      _id: todoId,
+      userId: req.user._id
+    });
+
+    if (!todo) {
       return res.status(404).json({ message: 'Todo not found or unauthorized' });
     }
+
+    todo.isCompleted = !todo.isCompleted;
+
+    const updatedTodo = await todo.save();
 
     return res.json({ message: 'Todo status updated successfully', todo: updatedTodo });
   } catch (error) {
@@ -86,6 +89,7 @@ async function handelMarkTodo(req, res) {
     return res.status(500).json({ message: 'Server error', error: error.message });
   }
 }
+
 
 
 async function handelUpdateTodo(req, res) {
